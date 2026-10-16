@@ -3,14 +3,24 @@ name: Snowflake OIDC connection test
 on:
   workflow_dispatch:
     inputs:
-      target_environment:
-        description: Snowflake environment to test
+      tier:
+        description: Snowflake account tier
         type: choice
         required: true
         default: nonprod
         options:
           - nonprod
           - prod
+      stage:
+        description: Nonprod stage (or prod deployment stage)
+        type: choice
+        required: true
+        default: dev
+        options:
+          - dev
+          - sit
+          - test
+          - perf
 
 permissions:
   contents: read
@@ -18,7 +28,7 @@ permissions:
 jobs:
   test-connection:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.target_environment }}
+    environment: ${{ inputs.tier }}-${{ inputs.stage }}
     permissions:
       id-token: write
       contents: read
